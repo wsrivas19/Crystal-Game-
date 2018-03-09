@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Crystals Collector</title>
+
+    <meta charset="UTF-8">
+
+   <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+
+	<!-- Link of bootstrap.css -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<style>
+    body {
+            background: lightblue;
+        }
+
+        .row {
+            margin-bottom: 10px;
+        }
+
+        .randomNumberDiv {
+            background-color: lightpink;
+        }
+
+        .winsLossesDiv {
+            background-color: lightpink
+        }
+
+        .scoreDiv {
+            background-color: lightpink;
+        }
+    
+    </style>
+
+</head>
+
+<body>
+
+	<div class="container">
+
+		<div class="jumbotron">
+			<!-- header at the top -->
+			<h1>Crystals Collector!</h1>
+            
+			<!-- instructions -->
+			<h4>You will be given a random number at the start of the game.</h4>
+            
+			<h4>There are four crystals below. By clicking on a crystal you will add a specific amount of points to your total score.</h4>
+            
+			<h4>You win the game by matching your total score to random number. You lose the game if your total score goes above the random number.</h4>
+            
+			<h4>The value of each crystal is hidden from you until you click on it.</h4>
+            
+			<h4>Each time when the game starts, the game will change the values of each crystal.</h4>
+            
+		</div>
+
+		<!-- random number div and wins/losses div -->
+		<div class="row">
+			<div class="col-md-3 col-md-offset-1 randomNumberDiv">
+				<h2 id="randomNumber">Random Number:</h2>
+			</div>
+			<div class="col-md-3 col-md-offset-1 winsLossesDiv">
+				<p id="winsTally">Wins: </p>
+				<p id="lossesTally">losses: </p>
+			</div>
+		</div>
+
+		<!-- gems -->
+		<div class="row">
+			<div class="col-md-1 col-md-offset-1 gem" value="gem1">
+				<img src="assets/gem1.png" class="img-responsive" alt="Gem1">
+			</div>
+			<div class="col-md-1 col-md-offset-1 gem" value="gem2">
+				<img src="assets/gem2.png" class="img-responsive" alt="Gem2">
+			</div>
+			<div class="col-md-1 col-md-offset-1 gem" value="gem3">
+				<img src="assets/gem3.png" class="img-responsive" alt="Gem3">
+			</div>
+			<div class="col-md-1 col-md-offset-1 gem" value="gem4">
+				<img src="assets/gem4.png" class="img-responsive" alt="Gem4">
+			</div>
+		</div>
+		
+		<!-- score text row -->
+		<div class="row">
+			<div class="col-md-3 col-md-offset-1 scoreDiv">
+				<p>Your total score is:</p>
+			</div>
+		</div>
+
+		<!-- user score div -->
+		<div class="row">
+			<div class="col-md-3 col-md-offset-1 scoreDiv">
+				<h2 id="userScore">score</h2>
+			</div>
+		</div>
+	
+	
+	</div>
+
+	
+	<script>
+        
+        
+    // JavaScript function that wraps everything
+  $(document).ready(function() {
+        
+    // Set up global variables first
+
+	var gemOneValue, gemTwoValue, gemThreeValue, gemFourValue;
+	var wins = 0;
+	var losses = 0;
+
+	// randomComputerNumber is the random number
+	var randomComputerNumber;
+
+	// userTallyScore is the ongoing sum of gem values 
+	var userTallyScore;
+
+	
+	// Set up functions
+	
+	// function that initializes the variables for each now round of the game
+	function initializeVariables() {
+        
+		// have computer pick a number between 19-102
+        
+		randomComputerNumber = 19 + Math.floor(Math.random() * 102);
+		// pick random gem values between 1-12
+        
+		gemOneValue = 1 + Math.floor(Math.random() * 12);
+		gemTwoValue = 1 + Math.floor(Math.random() * 12);
+		gemThreeValue = 1 + Math.floor(Math.random() * 12);
+		gemFourValue = 1 + Math.floor(Math.random() * 12);
+        
+		// set initial value of user's ongoing gem selections sum to 0
+        
+		userTallyScore = 0;
+        
+		// update the html for the game board
+		$("#winsTally").html("Wins: " + wins);
+		$("#lossesTally").html("Losses: " + losses);
+		$("#randomNumber").html(randomComputerNumber);
+		$("#userScore").html(userTallyScore);
+		consoleLogVariables();
+	}
+
+	// function to check if user has won or lost
+	// number of wins / losses 
+	// and then reinitialize variables for new round
+	
+
+	function hasUserWonOrLost() {
+        
+		// check if user has lost
+		if (userTallyScore > randomComputerNumber) {
+			losses++;
+			console.log("user lost");
+			initializeVariables();
+		}
+
+		// check if user has won
+		if (userTallyScore == randomComputerNumber) {
+			wins++;
+			console.log("user won");
+			initializeVariables();
+		}
+	}
+
+	// functionality function
+	function consoleLogVariables() {
+		console.log("wins: " + wins + " losses: " + losses);
+		console.log("gemOneValue: ", gemOneValue + " gemTwoValue: " + gemTwoValue + " gemThreeValue: " + gemThreeValue + " gemFourValue: " + gemFourValue);
+		console.log("randomComputerNumber: " + randomComputerNumber + " userTallyScore: " + userTallyScore);
+		console.log("-");
+
+	}
+
+	
+
+	initializeVariables();
+
+	// listen for clicks on any of the gems by targeting the gem class
+	$(".gem").on("click", function() {
+        
+		// each gem has a value of gem1, gem2, gem3, or gem 4
+		// use this attribute to identify which gem the user actually clicked
+        
+		var pressed = $(this).attr("value");
+        console.log(pressed);
+        
+        // add the value of the gem to the user's ongoing score tally
+        
+        if (pressed == "gem1") {
+        	userTallyScore += gemOneValue;
+        } else if (pressed == "gem2") {
+        	userTallyScore += gemTwoValue;
+        } else if (pressed == "gem3") {
+        	userTallyScore += gemThreeValue;
+        } else if (pressed == "gem4") {
+        	userTallyScore += gemFourValue;
+        } else {
+        	console.log("error");
+        }
+        // then update the html for the user score
+        
+        $("#userScore").html(userTallyScore);
+        consoleLogVariables();
+        
+        // call the function to see if user has won or lost
+        
+        hasUserWonOrLost();
+	});
+});
+    
+    </script>
+    
+   
+
+</body>
+
+</html>
